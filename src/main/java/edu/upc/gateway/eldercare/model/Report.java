@@ -23,6 +23,18 @@ public class Report {
 
     private String latitude;
 
-    private LocalDateTime time;
+    private String reportTime;
 
 }
+
+/*
+{
+    "id": 0,
+    "heartRate": 0,
+    "breathingFrequency": 0,
+    "temperature": 0,
+    "longitude": "string",
+    "latitude": "string",
+    "reportTime": "2024-06-25T22:51:41.026Z"
+  }
+*/

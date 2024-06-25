@@ -2,16 +2,21 @@ package edu.upc.gateway.eldercare.controller;
 
 import edu.upc.gateway.eldercare.model.Report;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 
 @Tag(name = "Report gateway", description = "the report gateway")
 @RestController
 @RequestMapping("/api/Elderlycare/v1")
 public class ReportController {
+
+    private static final Logger logger = LoggerFactory.getLogger(ReportController.class);
     private final WebClient webClient;
 
     public ReportController(@Value("${downstream.service.url}") String downstreamUrl) {
@@ -27,6 +32,10 @@ public class ReportController {
                 .uri(endpoint)
                 .body(BodyInserters.fromValue(report))
                 .retrieve()
-                .bodyToMono(Report.class);
+                .bodyToMono(Report.class)
+                .doOnError(WebClientResponseException.class, e -> {
+                    logger.error("Error creating report: Status {}, Body: {}", e.getStatusCode(), e.getResponseBodyAsString());
+                })
+                .onErrorResume(WebClientResponseException.class, e -> Mono.error(new RuntimeException("Failed to create report", e)));
     }
 }
