@@ -11,6 +11,9 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 @Tag(name = "Report gateway", description = "the report gateway")
 @RestController
 @RequestMapping("/api/Elderlycare/v1")
@@ -28,6 +31,7 @@ public class ReportController {
     @PostMapping("/report")
     public Mono<Report> createReport(@RequestBody Report report, @RequestParam("patientId") int id) {
         String endpoint = "/api/oneup/v1/report/" + id;
+        report.setReportTime(generateCurrentReportTime());
         return webClient.post()
                 .uri(endpoint)
                 .body(BodyInserters.fromValue(report))
@@ -37,5 +41,10 @@ public class ReportController {
                     logger.error("Error creating report: Status {}, Body: {}", e.getStatusCode(), e.getResponseBodyAsString());
                 })
                 .onErrorResume(WebClientResponseException.class, e -> Mono.error(new RuntimeException("Failed to create report", e)));
+    }
+
+    private String generateCurrentReportTime() {
+        LocalDateTime now = LocalDateTime.now();
+        return now.format(DateTimeFormatter.ISO_INSTANT);
     }
 }
