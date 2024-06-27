@@ -1,13 +1,13 @@
 package edu.upc.gateway.eldercare.model;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 //import net.bytebuddy.asm.Advice;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
+@Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,8 +24,8 @@ public class Report {
 
     private String latitude;
 
-    @JsonIgnore
-    private String reportTime;
+    @Builder.Default
+    private Date reportTime = new Date();
 
 }
 
