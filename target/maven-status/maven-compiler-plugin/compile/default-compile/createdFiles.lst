@@ -1,0 +1,5 @@
+edu\upc\gateway\eldercare\controller\ReportController.class
+edu\upc\gateway\eldercare\configs\SwaggerConfig.class
+edu\upc\gateway\eldercare\model\Patient.class
+edu\upc\gateway\eldercare\model\Report.class
+edu\upc\gateway\eldercare\Application.class
